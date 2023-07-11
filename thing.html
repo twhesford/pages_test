@@ -15,7 +15,7 @@
     
   ></script>
 
-    <link rel="stylesheet" type="text/css" href="/css/result-light.css">
+    <!-- <link rel="stylesheet" type="text/css" href="/css/result-light.css"> -->
 
       <script type="text/javascript" src="https://code.highcharts.com/stock/highstock.js"></script>
       <script type="text/javascript" src="https://code.highcharts.com/stock/modules/exporting.js"></script>
@@ -45,7 +45,7 @@ var ajaxstart = new Date().getTime();
 // http://erddap.secoora.org/erddap/tabledap/cmsdock.json?time%2Cwind_speed_of_gust&time%3E=2023-07-04T18%3A45%3A00Z
         
 $.ajax({
-  url: 'http://erddap.secoora.org/erddap/tabledap/org_cormp_ilm3.json?time%2Cwind_speed',
+  url: 'http://erddap.secoora.org/erddap/tabledap/org_cormp_sun2.json?time%2Csea_water_practical_salinity',
   dataType: 'jsonp',
   jsonp: '.jsonp',
   cache: 'true',
