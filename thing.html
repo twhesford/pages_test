@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Jquery AJAX ERDDAP and Highcharts</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="googlebot" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <script
+    type="text/javascript"
+    src="//code.jquery.com/jquery-1.11.0.js"
+    
+  ></script>
+
+    <link rel="stylesheet" type="text/css" href="/css/result-light.css">
+
+      <script type="text/javascript" src="https://code.highcharts.com/stock/highstock.js"></script>
+      <script type="text/javascript" src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+
+  <style id="compiled-css" type="text/css">
+    
+
+    /* EOS */
+  </style>
+
+  <script id="insert"></script>
+
+</head>
+<body>
+    
+<div id="container" style="height: 400px; min-width: 310px"></div>
+<div id="info"></div>
+
+
+    <script type="text/javascript">//<![CDATA[
+
+
+var ajaxstart = new Date().getTime();
+
+//https://erddap.cencoos.org/erddap/tabledap/org_mbari_m1.json?time%2Csea_water_temperature&time%3E=2018-04-28T00%3A00%3A00Z&time%3C=2018-07-05T19%3A04%3A20Z&distinct()
+
+// http://erddap.secoora.org/erddap/tabledap/cmsdock.json?time%2Cwind_speed_of_gust&time%3E=2023-07-04T18%3A45%3A00Z
+        
+$.ajax({
+  url: 'http://erddap.secoora.org/erddap/tabledap/org_cormp_ilm3.json?time%2Cwind_speed',
+  dataType: 'jsonp',
+  jsonp: '.jsonp',
+  cache: 'true',
+  success: function(data) {
+
+    var ajaxend = new Date().getTime();
+    console.log('milliseconds passed', ajaxend - ajaxstart);
+
+    var response = data.table
+    console.log(response)
+    var dataForChart = [];
+
+    $.each(response.rows, function(index, row) {
+      var isoDate = new Date(row[0]);
+      var jsdate = isoDate.getTime();
+      rowForChart = [jsdate, row[1]];
+      dataForChart.push(rowForChart);
+    });
+
+    // Create a timer
+    var start = +new Date();
+
+    // Create the chart
+    $('#container').highcharts('StockChart', {
+      chart: {
+        events: {
+          load: function() {
+            if (!window.isComparing) {
+              this.setTitle(null, {
+                text: 'Built chart in ' + (new Date() - start) + 'ms'
+              });
+            }
+          }
+        },
+        zoomType: 'x'
+      },
+
+      rangeSelector: {
+
+        buttons: [{
+          type: 'day',
+          count: 3,
+          text: '3d'
+        }, {
+          type: 'week',
+          count: 1,
+          text: '1w'
+        }, {
+          type: 'month',
+          count: 1,
+          text: '1m'
+        }, {
+          type: 'month',
+          count: 6,
+          text: '6m'
+        }, {
+          type: 'year',
+          text: '1y'
+        }, {
+          type: 'all',
+          text: 'All'
+        }],
+        selected: 5
+      },
+
+      yAxis: {
+        title: {
+          text: 'Temperature (°C)'
+        }
+      },
+
+      title: {
+        text: 'M1 Water Temperature'
+      },
+
+      subtitle: {
+        text: 'Built chart in ...' // dummy text to reserve space for dynamic subtitle
+      },
+      series: [{
+        data: dataForChart,
+
+      }]
+
+
+    });
+
+  },
+  type: 'GET'
+});
+
+
+
+  //]]></script>
+
+  <script>
+    // tell the embed parent frame the height of the content
+    if (window.parent && window.parent.parent){
+      window.parent.parent.postMessage(["resultsFrame", {
+        height: document.body.getBoundingClientRect().height,
+        slug: "0ycu1zjy"
+      }], "*")
+    }
+
+    // always overwrite window.name, in case users try to set it manually
+    window.name = "result"
+  </script>
+
+    <py-script>
+        
+
+</body>
+</html>S
